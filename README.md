@@ -47,8 +47,8 @@ Select *
 FROM NetflixData 
 WHERE type='Movie' AND release_year ='2020';
 ```
-###4. Identify the top 5 countries with the most titles on Netflix
-
+### 4. Identify the top 5 countries with the most titles on Netflix
+```
 WITH SplitCountry AS (
     SELECT 
         LTRIM(RTRIM(value)) AS individual_country
@@ -67,9 +67,9 @@ SELECT  TOP 5 totalCountries  ,
 FROM CountCountry
 WHERE individual_country is not null
 ORDER BY  totalCountries desc;
-
-###5. Find the single longest movie by its duration
-
+```
+### 5. Find the single longest movie by its duration
+```
 WITH durationSplit as 
 (
 SELECT TRIM(REPLACE(duration, 'min', '')) AS duration_num,type,title
@@ -82,9 +82,9 @@ FROM durationSplit
 WHERE type ='Movie'
 GROUP BY title,duration_num
 ORDER BY duration_num desc;
-
-###6. Find directors who have directed both at least one Movie and one TV Show
-
+```
+### 6. Find directors who have directed both at least one Movie and one TV Show
+```
 WITH count_shows AS (
     SELECT director,
         COUNT(CASE WHEN type = 'Movie' THEN 1 END) AS movie_count,
@@ -97,34 +97,37 @@ FROM count_shows
 WHERE director IS NOT NULL 
   AND movie_count > 0 
   AND tv_count > 0;
-
-###7. Find the total amount of content added over the last 5 years
-
+```
+### 7. Find the total amount of content added over the last 5 years
+```
 SELECT *
 FROM NetflixData
 WHERE DATEDIFF(year, date_added, GETDATE()) <= 5;
-
-###8. List all content classified under the "Documentaries" genre
+```
+### 8. List all content classified under the "Documentaries" genre
+```
 SELECT * 
 FROM NetflixData 
 WHERE listed_in LIKE '%Documentaries%';
-
-###9. Find all TV shows or movies that completely lack data for the director field
+```
+### 9. Find all TV shows or movies that completely lack data for the director field
+```
 SELECT type, COUNT(*) AS missing_directors
 FROM NetflixData
 WHERE director='Unknown'
 GROUP BY type;
-
-###10. Find All Movies/TV Shows by Director 'Anurag Kashyap'
-
+```
+### 10. Find All Movies/TV Shows by Director 'Anurag Kashyap'
+```
 SELECT COUNT(*)AS Count_ofShows,
 LTRIM(RTRIM(director)) as Director 
 FROM NetflixData
 CROSS APPLY STRING_SPLIT(director, ',')
 WHERE LTRIM(RTRIM(director)) = 'Anurag Kashyap'
 GROUP BY LTRIM(RTRIM(director));
-
-###11.Final All Movies/TV Shows with title directed by India country
+```
+### 11.Final All Movies/TV Shows with title directed by India country
+```
 WITH UnnestedData AS (
     SELECT 
         TRIM(d.value) AS individual_director,
@@ -159,8 +162,9 @@ FROM DirectorCounts
 WHERE movie_count > 0 
   AND tv_count > 0
 ORDER BY total_content DESC;
-
-###12. Count the Number of Content Items in Each Genre
+```
+### 12. Count the Number of Content Items in Each Genre
+```
 SELECT 
     TRIM(value) AS individual_genre,
     COUNT(*) AS total_content
@@ -168,10 +172,9 @@ FROM NetflixData
 CROSS APPLY STRING_SPLIT(listed_in, ',')
 GROUP BY TRIM(value)
 ORDER BY total_content DESC;
-
-
-###13. Find each year and the average numbers of content release in India on netflix
-
+```
+### 13. Find each year and the average numbers of content release in India on netflix
+```
 WITH YearlyCounts AS (
     SELECT 
         release_year,
@@ -186,17 +189,16 @@ SELECT TOP 5
     AVG(CAST(year_total AS FLOAT)) OVER() AS overall_avg_per_year
 FROM YearlyCounts
 ORDER BY year_total DESC;
-
-
-###14. Find how many movies actor 'Salman Khan' appeared in last 10 years
-
+```
+### 14. Find how many movies actor 'Salman Khan' appeared in last 10 years
+```
 SELECT * 
 FROM NetflixData 
 WHERE cast LIKE '%Salman%'
 AND release_year > DATEPART(year,release_year)  - 10;
-
-###15. Find the top 10 actors who have appeared in the highest number of movies produced in India
-
+```
+### 15. Find the top 10 actors who have appeared in the highest number of movies produced in India
+```
 SELECT TOP 10
     TRIM(value) AS actor,
     COUNT(*) AS No_of_movies
@@ -205,9 +207,9 @@ CROSS APPLY STRING_SPLIT(cast,',')
 WHERE country = 'India'
 GROUP BY TRIM(value)
 ORDER BY COUNT(*) DESC;
-
-#Categorize the content based on the presence of the keywords 'kill' and 'violence' in the description field. Label content containing these keywords as 'Bad' and all other content as 'Good'. Count how many items fall into each category 
-
+```
+# Categorize the content based on the presence of the keywords 'kill' and 'violence' in the description field. Label content containing these keywords as 'Bad' and all other content as 'Good'. Count how many items fall into each category 
+```
 SELECT 
     category,
     COUNT(*) AS content_count
@@ -220,7 +222,7 @@ FROM (
     FROM NetflixData
 ) AS categorized_content
 GROUP BY category;
-
+```
 
 
 
