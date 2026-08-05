@@ -1,32 +1,32 @@
 # NetflixDataset_SQL_Project
 ![NETFLIX LOGO](NETFLIXLOGO.jpg)
 
-#OVERVIEW
+# OVERVIEW
 
 This project performs an end-to-end exploratory data analysis (EDA) on a Netflix dataset using T-SQL (Microsoft SQL Server). The analysis addresses key business questions around content distribution, regional trends, director and actor participation, genre categorization, and duration metrics. The following README provides a detailed account of the project's objectives, business problems, solutions, findings, and conclusions.
 
 
-#OBJECTIVE
+# OBJECTIVE
 
 - Analyze the distribution of content types (movies vs TV shows).
 - Identify the most common ratings for movies and TV shows.
 - List and analyze content based on release years, countries, and durations.
 - Explore and categorize content based on specific criteria and keywords.
 
-#DATASET
+# DATASET
 The data for this project is sourced from the Kaggle dataset:[Netflix Dataset](https://www.kaggle.com/datasets/sahibjotchandla/netflixdata) 
 
 
-###1. Count the split between Movies and TV Shows
-
+### 1. Count the split between Movies and TV Shows
+```
 SELECT 
 type, 
 COUNT(*) as show_count 
 FROM NetflixData 
 GROUP BY type;
-
-###2. Find the most common rating for each content type
-
+```
+### 2. Find the most common rating for each content type
+```
 WITH cte1 AS (
 
 SELECT type, 
@@ -40,13 +40,13 @@ SELECT type,
     rating,
     common_rating 
     FROM cte1;
-
-###3. Extract all movies released exactly in the year 2020
-
+```
+### 3. Extract all movies released exactly in the year 2020
+```
 Select * 
 FROM NetflixData 
 WHERE type='Movie' AND release_year ='2020';
-
+```
 ###4. Identify the top 5 countries with the most titles on Netflix
 
 WITH SplitCountry AS (
